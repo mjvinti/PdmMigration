@@ -1,0 +1,7 @@
+C:\Users\mvinti\source\repos\PdmMigration\PdmMigration\bin\Debug\PdmMigration.exe.config
+C:\Users\mvinti\source\repos\PdmMigration\PdmMigration\bin\Debug\PdmMigration.exe
+C:\Users\mvinti\source\repos\PdmMigration\PdmMigration\bin\Debug\PdmMigration.pdb
+C:\Users\mvinti\source\repos\PdmMigration\PdmMigration\obj\Debug\PdmMigration.csprojResolveAssemblyReference.cache
+C:\Users\mvinti\source\repos\PdmMigration\PdmMigration\obj\Debug\PdmMigration.csproj.CoreCompileInputs.cache
+C:\Users\mvinti\source\repos\PdmMigration\PdmMigration\obj\Debug\PdmMigration.exe
+C:\Users\mvinti\source\repos\PdmMigration\PdmMigration\obj\Debug\PdmMigration.pdb

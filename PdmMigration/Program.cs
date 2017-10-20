@@ -10,15 +10,16 @@ namespace PdmMigration
 {
     class Program
     {
-        static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog.csv";
-        static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\TOR_full_201710081815.txt";
-        static string serverName = "pdm.tor.moog.com";
-        static string outputFile = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\TOR\test_torpdm4.txt";
-        static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\TOR\test_torpdm4_misfits.txt";
-        static string uncRawPrefix = @"\\toriman.tor.moog.com";
-        static string uncPdfPrefix = @"\\toriman.tor.moog.com\tcpdf";
+        public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog.csv";
+        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\TOR_full_201710081815.txt";
+        public static string serverName = "pdm.tor.moog.com";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\TOR\test_torpdm4.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\TOR\test_torpdm4_misfits.txt";
+        public static string uncRawPrefix = @"\\toriman.tor.moog.com";
+        public static string uncPdfPrefix = @"\\toriman.tor.moog.com\tcpdf";
+        public static bool isWindows = false;
 
-        static bool IsExt(string token)
+        public static bool IsExt(string token)
         {
             switch (token.ToLower())
             {
@@ -93,177 +94,6 @@ namespace PdmMigration
             }
         }
 
-        public static PdmItem ParseSourceLine(string line)
-        {
-            PdmItem pdmItem = new PdmItem();
-            pdmItem.HasRev = false;
-            pdmItem.HasSht = false;
-            pdmItem.HasExt = false;
-            int idx1;
-            int idx2;
-            string pathOnly;
-            string fileName;
-
-            if (line.EndsWith(".Z") || line.StartsWith("-r") || !line.Contains("\\"))
-            {
-                //populate all data in PDMItem by parsing line with Linux rules
-                List<string> linuxData = line.Split(' ').ToList();
-                linuxData.RemoveAll(String.IsNullOrEmpty);
-                linuxData.RemoveRange(0, 4);
-
-                pdmItem.FileSize = Convert.ToInt64(linuxData[0]);
-
-                pdmItem.FileMonth = linuxData[1];
-                pdmItem.FileDay = linuxData[2];
-
-                if (linuxData[3].Contains(":"))
-                {
-                    pdmItem.FileYear = "2017";
-                    pdmItem.FileTime = linuxData[3];
-                }
-                else
-                {
-                    pdmItem.FileYear = linuxData[3];
-                    pdmItem.FileTime = "00:00";
-                }
-
-                pdmItem.FileDateTime = Convert.ToDateTime(pdmItem.FileMonth + ' ' + pdmItem.FileDay + ' ' + pdmItem.FileYear + ' ' + pdmItem.FileTime);
-
-                pdmItem.FilePath = linuxData[4];
-
-                idx1 = pdmItem.FilePath.LastIndexOf('/');
-                pathOnly = pdmItem.FilePath.Substring(0, idx1 + 1);
-                fileName = pdmItem.FilePath.Substring(idx1 + 1);
-
-                string[] linuxDataFileSplit = pdmItem.FilePath.Split('.');
-
-                idx2 = linuxDataFileSplit[0].LastIndexOf('/');
-                pdmItem.ItemName = linuxDataFileSplit[0].Substring(idx2 + 1);
-
-                if (linuxDataFileSplit.Length == 2)
-                {
-                    pdmItem.HasExt = true;
-                    pdmItem.ItemExt = linuxDataFileSplit[1];
-                    //string uncRawPath = BuildUncRawPath(item.FilePath);
-                    //string uncPdfPath = BuildUncPdfPath(item.ItemName, item.ItemRev);
-                }
-
-                else if (linuxDataFileSplit.Length > 2)
-                {
-                    if (!IsExt(linuxDataFileSplit[1]))
-                    {
-                        pdmItem.HasRev = true;
-                        pdmItem.ItemRev = linuxDataFileSplit[1];
-                    }
-                    else
-                    {
-                        pdmItem.HasExt = true;
-                        pdmItem.ItemExt = linuxDataFileSplit[1];
-                    }
-
-                    if (!IsExt(linuxDataFileSplit[2]))
-                    {
-                        pdmItem.HasSht = true;
-                        pdmItem.ItemSht = linuxDataFileSplit[2];
-                    }
-                    else
-                    {
-                        pdmItem.HasExt = true;
-                        pdmItem.ItemExt = linuxDataFileSplit[2];
-                    }
-
-                    if (linuxDataFileSplit.Length > 3 && IsExt(linuxDataFileSplit[3]))
-                    {
-                        pdmItem.HasExt = true;
-                        pdmItem.ItemExt = linuxDataFileSplit[3];
-                    }
-
-                    if (nonStandardData)
-                    {
-                        misfit_InvalidFormat
-                    }
-                }
-
-                else if (line.EndsWith("._") || line.Contains("\\"))
-                {
-                    //popluate all data in PDMItem by parsing line with Windows rules
-                    List<string> windowsData = line.Split(' ').ToList();
-                    windowsData.RemoveAll(String.IsNullOrEmpty);
-
-                    pdmItem.FileSize = Convert.ToInt64(windowsData[0]);
-
-                    pdmItem.FileDateTime = Convert.ToDateTime(windowsData[1] + ' ' + windowsData[2] + ' ' + windowsData[3]);
-
-                    //item.FileDateTime = data[1] is month/day/year; data[2] is HH:MM:SS; data[3] is AM/PM 
-                    //item.FileDateTime = Convert.ToDateTime(item.FileMonth + ' ' + item.FileDay + ' ' + item.FileYear + ' ' + item.FileTime);
-
-                    pdmItem.FilePath = windowsData[4];
-
-                    idx1 = pdmItem.FilePath.LastIndexOf('\\');
-                    pathOnly = pdmItem.FilePath.Substring(2, idx1 + 1);
-                    fileName = pdmItem.FilePath.Substring(idx1 + 1);
-
-                    string[] windowsDataFileSplit = pdmItem.FilePath.Split('.');
-
-                    idx2 = windowsDataFileSplit[0].LastIndexOf('\\');
-                    pdmItem.ItemName = windowsDataFileSplit[0].Substring(idx2 + 1);
-
-                    if (windowsDataFileSplit.Length == 2)
-                    {
-                        pdmItem.HasExt = true;
-                        pdmItem.ItemExt = windowsDataFileSplit[1];
-                        //string uncRawPath = BuildUncRawPath(item.FilePath);
-                        //string uncPdfPath = BuildUncPdfPath(item.ItemName, item.ItemRev);
-                    }
-
-                    else if (windowsDataFileSplit.Length > 2)
-                    {
-                        if (!IsExt(windowsDataFileSplit[1]))
-                        {
-                            pdmItem.HasRev = true;
-                            pdmItem.ItemRev = windowsDataFileSplit[1];
-                        }
-                        else
-                        {
-                            pdmItem.HasExt = true;
-                            pdmItem.ItemExt = windowsDataFileSplit[1];
-                        }
-
-                        if (!IsExt(windowsDataFileSplit[2]))
-                        {
-                            pdmItem.HasSht = true;
-                            pdmItem.ItemSht = windowsDataFileSplit[2];
-                        }
-                        else
-                        {
-                            pdmItem.HasExt = true;
-                            pdmItem.ItemExt = windowsDataFileSplit[2];
-                        }
-
-                        if (windowsDataFileSplit.Length > 3 && IsExt(windowsDataFileSplit[3]))
-                        {
-                            pdmItem.HasExt = true;
-                            pdmItem.ItemExt = windowsDataFileSplit[3];
-                        }
-
-                        if (nonStandardData)
-                        {
-                            misfit_InvalidFormat
-                        }
-                    }
-
-                    else
-                    {
-                        misfit_InvalidFormat
-                    }
-
-                    return pdmItem;
-                }
-
-            }
-
-        }
-
         public static void JobTicketGenerator(Dictionary<string, List<string>> dictionary)
         {
             foreach (KeyValuePair<string, List<string>> kvp in dictionary)
@@ -292,16 +122,15 @@ namespace PdmMigration
                 jobTicket.AppendLine("</JOB>");
                 jobTicket.AppendLine("</JOBS>");
 
+                Console.WriteLine(jobTicket.ToString());
                 //File.WriteAllText(@"\\eacmpnas01.moog.com\Vol3_Data\PDM\migration\pdm.moog.com\jobs\" + kvp.Key + ".xml", jobTicket.ToString());
-                File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
+                //File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
             }
         }
 
-        static void Main(string[] args)
+        public static Hashtable LoadPdmCatalog()
         {
-            List<PdmItem> pdmItems = new List<PdmItem>();
-            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
-            Hashtable hashtable = new Hashtable();
+            Hashtable pdmHashTable = new Hashtable();
 
             //load Pdm Catalog File
             StreamReader sr = new StreamReader(catalogFile);
@@ -315,67 +144,95 @@ namespace PdmMigration
 
                 pdmCatalogItem.Server = pdmCatalog[0];
                 pdmCatalogItem.FileName = pdmCatalog[2];
-                
-                if(!hashtable.ContainsKey(pdmCatalogItem.FileName))
+
+                if (!pdmHashTable.ContainsKey(pdmCatalogItem.FileName))
                 {
-                    hashtable.Add(pdmCatalogItem.FileName, null);
+                    pdmHashTable.Add(pdmCatalogItem.FileName, null);
                 }
             }
+            return pdmHashTable;
+        }
+
+        static void Main(string[] args)
+        {
+            List<PdmItem> pdmItems = new List<PdmItem>();
+            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+            Hashtable pdmCatalogTable = LoadPdmCatalog();
+            List<string> delimitedDataField = new List<string>();
+            List<string> islandOfMisfitToys = new List<string>();
 
             //parse extract file
             StreamReader file = new StreamReader(inputFile);
-            int counter = 0;
-            int counterSS = 0;
             string inputLine;
             
             while ((inputLine = file.ReadLine()) != null)
             {
-                if (inputLine.EndsWith(".ss"))
+                //Console.WriteLine(inputLine);
+                PdmItem pdmItem = new PdmItem();
+                pdmItem.ParseInputLine(inputLine);
+
+                if(!pdmCatalogTable.ContainsKey(pdmItem.FileName))
                 {
-                    counterSS++;
+                    pdmItem.IsMisfit = true;
+                    islandOfMisfitToys.Add("Not in catalog: " + inputLine);
                     continue;
                 }
-                
-                PdmItem item = ParseSourceLine(inputLine);
 
-                if(hashtable.ContainsKey(pdmItem.FileName))
+                if(pdmItem.IsMisfit)
                 {
-                    pdmItems.Add(item);
-                    List<string> valueFilePath = new List<string>();
-                    valueFilePath.Add(pdmItem.FileName);
-                    dictionary.Add(pdmItem.ItemName + "." + pdmItem.ItemRev, valueFilePath);
+                    islandOfMisfitToys.Add("Misfit: " + inputLine);
                 }
-        
                 else
                 {
-                    misfit_NotInCatalog
+                    delimitedDataField.Add(pdmItem.GetOutputLine());
                 }
 
-                counter++;
+                //logic to handle no revs
+                string uID;
+                if (String.IsNullOrEmpty(pdmItem.ItemRev))
+                {
+                    uID = pdmItem.ItemName;
+                }
+
+                else
+                {
+                    uID = pdmItem.ItemName + "." + pdmItem.ItemRev;
+                }
+
+                if (!dictionary.Keys.Contains(uID))
+                {
+                    List<string> valueFilePath = new List<string>();
+                    valueFilePath.Add(pdmItem.FileName);
+                    dictionary.Add(uID, valueFilePath);
+                }
+                else
+                {
+                    dictionary[uID].Add(pdmItem.FileName);
+                }
             }
 
             //Inspect Dictionary for possible invalid sheets 
-            foreach(KeyValuePair<string, List<string>> dictionaryKeyValuePair in dictionary)
-            {
-                foreach(var value in dictionaryKeyValuePair.Value)
-                {
-                    if(pdmItem.ItemSht.Length == value.Length)
-                    {
-                        misfit_InvalidSheets
-                    }
-                }
+            //foreach(KeyValuePair<string, List<string>> dictionaryKeyValuePair in dictionary)
+            //{
+            //    foreach(var value in dictionaryKeyValuePair.Value)
+            //    {
+            //        if(pdmItem.ItemSht.Length == value.Length)
+            //        {
+            //            misfit_InvalidSheets
+            //        }
+            //    }
                     
-            }
+            //}
             
             //output all misfits to file
-            File.WriteAllLines(misfitToys, islandOfMisfitToys);
+            //File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
             // generate file for Graig
             //File.WriteAllLines(outputFile, delimitedDataField);
 
             // generate XML job tickets
-            //JobTicketGenerator(dictionary);
+            JobTicketGenerator(dictionary);
 
         }
     }

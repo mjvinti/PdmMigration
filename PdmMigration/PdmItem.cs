@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,11 +28,194 @@ namespace PdmMigration
         public string Server { get; set; }       // ex: pdm.moog.com
         public string UncRaw { get; set; }       // ex: \\eacmpnas01.moog.com\Vol5_Data\PDM\EA\archive\pdm\web\hpgl\A\A12345.0.01.plt
         public string UncPdf { get; set; }       // ex: \\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf\A12345.0.pdf
+        public bool IsWindows { get; set; }
+        public bool IsMisfit { get; set; }
 
-        public string getOutputLine()
+        public void ParseInputLine(string line)
+        {
+            IsMisfit = false;
+            HasRev = false;
+            HasSht = false;
+            HasExt = false;
+
+            if (line.EndsWith(".ss"))
+            {
+                IsMisfit = true;
+            }
+
+            if (Program.isWindows)
+            {
+                //do parsing logic for windows
+                List<string> windowsData = line.Split(' ').ToList();
+                windowsData.RemoveAll(String.IsNullOrEmpty);
+
+                FileSize = Convert.ToInt64(windowsData[0]);
+                FileDateTime = Convert.ToDateTime(windowsData[1] + ' ' + windowsData[2] + ' ' + windowsData[3]);
+                FilePathName = windowsData[4];
+
+                int idx = FilePathName.LastIndexOf('\\');
+                FilePath = FilePathName.Substring(2, idx + 1);
+                FileName = FilePathName.Substring(idx + 1);
+
+                string[] dataFileSplit = FilePathName.Split('.');
+
+                int idx2 = dataFileSplit[0].LastIndexOf('\\');
+                ItemName = dataFileSplit[0].Substring(idx2 + 1);
+
+                UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
+                UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
+
+                if (dataFileSplit.Length == 2)
+                {
+                    HasExt = true;
+                    ItemExt = dataFileSplit[1];
+                }
+
+                else if (dataFileSplit.Length > 2)
+                {
+                    if (!Program.IsExt(dataFileSplit[1]))
+                    {
+                        HasRev = true;
+                        ItemRev = dataFileSplit[1];
+                    }
+                    else
+                    {
+                        HasExt = true;
+                        ItemExt = dataFileSplit[1];
+                    }
+
+                    if (!Program.IsExt(dataFileSplit[2]))
+                    {
+                        HasSht = true;
+                        ItemSht = dataFileSplit[2];
+                    }
+                    else
+                    {
+                        HasExt = true;
+                        ItemExt = dataFileSplit[2];
+                    }
+
+                    if (dataFileSplit.Length > 3 && Program.IsExt(dataFileSplit[3]))
+                    {
+                        HasExt = true;
+                        ItemExt = dataFileSplit[3];
+                    }
+
+                    if (!HasRev && !HasSht && !HasExt)
+                    {
+                        IsMisfit = true;
+                    }
+                }
+
+                else
+                {
+                    IsMisfit = true;
+                }
+            }
+
+            else
+            {
+                //parsing logic for linux
+                //populate all data in PDMItem by parsing line with Linux rules
+                List<string> linuxData = line.Split(' ').ToList();
+                linuxData.RemoveAll(String.IsNullOrEmpty);
+                linuxData.RemoveRange(0, 4);
+
+                FileSize = Convert.ToInt64(linuxData[0]);
+                FileMonth = linuxData[1];
+                FileDay = linuxData[2];
+
+                if (linuxData[3].Contains(":"))
+                {
+                    FileYear = "2017";
+                    FileTime = linuxData[3];
+                }
+                else
+                {
+                    FileYear = linuxData[3];
+                    FileTime = "00:00";
+                }
+
+                FileDateTime = Convert.ToDateTime(FileMonth + ' ' + FileDay + ' ' + FileYear + ' ' + FileTime);
+
+                FilePathName = linuxData[4];
+
+                int idx = FilePathName.LastIndexOf('/');
+                FilePath = FilePathName.Substring(0, idx + 1);
+                FileName = FilePathName.Substring(idx + 1);
+
+                string[] linuxDataFileSplit = FilePathName.Split('.');
+
+                int idx2 = linuxDataFileSplit[0].LastIndexOf('/');
+                ItemName = linuxDataFileSplit[0].Substring(idx2 + 1);
+
+                UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
+                UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
+
+                if (linuxDataFileSplit.Length == 2)
+                {
+                    HasExt = true;
+                    ItemExt = linuxDataFileSplit[1];
+
+                }
+
+                else if (linuxDataFileSplit.Length > 2)
+                {
+                    if (!Program.IsExt(linuxDataFileSplit[1]))
+                    {
+                        HasRev = true;
+                        ItemRev = linuxDataFileSplit[1];
+                    }
+                    else
+                    {
+                        HasExt = true;
+                        ItemExt = linuxDataFileSplit[1];
+                    }
+
+                    if (!Program.IsExt(linuxDataFileSplit[2]))
+                    {
+                        HasSht = true;
+                        ItemSht = linuxDataFileSplit[2];
+                    }
+                    else
+                    {
+                        HasExt = true;
+                        ItemExt = linuxDataFileSplit[2];
+                    }
+
+                    if (linuxDataFileSplit.Length > 3 && Program.IsExt(linuxDataFileSplit[3]))
+                    {
+                        HasExt = true;
+                        ItemExt = linuxDataFileSplit[3];
+                    }
+
+                    if (!HasRev && !HasSht && !HasExt)
+                    {
+                        IsMisfit = true;
+                    }
+                    else
+                    {
+                    }
+                }
+
+                else
+                {
+                    IsMisfit = true;
+                }
+            }
+        }
+
+        public string GetOutputLine()
         {
             //build and return full output line string using the data members above (for Graig's file)
-            
+            StringBuilder output = new StringBuilder(FileSize + "," + FileDateTime.ToString("MMM d yyyy HH:mm") + "," + ItemName);
+
+            output.Append((HasRev) ? ("," + ItemRev) : (","));
+            output.Append((HasSht) ? ("," + ItemSht) : (","));
+            output.Append(("," + Server));
+            output.Append("," + UncRaw + "," + UncPdf);
+
+            return output.ToString();
         }
     }
 }
