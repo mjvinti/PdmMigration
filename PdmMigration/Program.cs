@@ -10,14 +10,14 @@ namespace PdmMigration
 {
     class Program
     {
-        public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog.csv";
-        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\TOR_full_201710081815.txt";
-        public static string serverName = "pdm.tor.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\TOR\test_torpdm4.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\TOR\test_torpdm4_misfits.txt";
-        public static string uncRawPrefix = @"\\toriman.tor.moog.com";
-        public static string uncPdfPrefix = @"\\toriman.tor.moog.com\tcpdf";
-        public static bool isWindows = false;
+        public static string catalogFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\PDM-Catalog.csv";
+        public static string inputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\IE_full_2017-10-24-1843.txt";
+        public static string serverName = "pdm.ie.moog.com";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_extracts_10252017.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_misfits_10252017.txt";
+        public static string uncRawPrefix = @"\\ieri3svwi003068.ie.moog.com";
+        public static string uncPdfPrefix = @"\\ieri3svwi003068.ie.moog.com\tcpdf";
+        public static bool isWindows = true;
 
         public static bool IsExt(string token)
         {
@@ -167,7 +167,7 @@ namespace PdmMigration
             
             while ((inputLine = file.ReadLine()) != null)
             {
-                //Console.WriteLine(inputLine);
+                Console.WriteLine(inputLine);
                 PdmItem pdmItem = new PdmItem();
                 pdmItem.ParseInputLine(inputLine);
 
@@ -225,14 +225,14 @@ namespace PdmMigration
             //}
             
             //output all misfits to file
-            //File.WriteAllLines(misfitToys, islandOfMisfitToys);
+            File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
             // generate file for Graig
-            //File.WriteAllLines(outputFile, delimitedDataField);
+            File.WriteAllLines(outputFile, delimitedDataField);
 
             // generate XML job tickets
-            JobTicketGenerator(dictionary);
+            //JobTicketGenerator(dictionary);
 
         }
     }

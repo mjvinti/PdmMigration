@@ -50,8 +50,18 @@ namespace PdmMigration
                 windowsData.RemoveAll(String.IsNullOrEmpty);
 
                 FileSize = Convert.ToInt64(windowsData[0]);
-                FileDateTime = Convert.ToDateTime(windowsData[1] + ' ' + windowsData[2] + ' ' + windowsData[3]);
-                FilePathName = windowsData[4];
+
+                //for non LU & IE
+                //FileDateTime = Convert.ToDateTime(windowsData[1] + ' ' + windowsData[2] + ' ' + windowsData[3]);
+                //FilePathName = windowsData[4];
+
+                // for LU
+                //FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                //FilePathName = windowsData[3];
+
+                // for IE
+                FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                FilePathName = windowsData[3];
 
                 int idx = FilePathName.LastIndexOf('\\');
                 FilePath = FilePathName.Substring(2, idx + 1);
