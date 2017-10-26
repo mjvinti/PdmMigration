@@ -18,7 +18,7 @@ namespace PdmMigration
             }
 
             uncRawPathName.Append(uncRawPrefix);
-            uncRawPathName.Append(filePath);
+            uncRawPathName.Append(filePath.Remove(0, 2));
             uncRawPathName.Replace('/', '\\');
             string uncRaw = uncRawPathName.ToString();
 

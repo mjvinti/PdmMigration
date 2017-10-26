@@ -13,8 +13,8 @@ namespace PdmMigration
         public static string catalogFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\PDM-Catalog.csv";
         public static string inputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\IE_full_2017-10-24-1843.txt";
         public static string serverName = "pdm.ie.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_extracts_10252017.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_misfits_10252017.txt";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_extracts_10262017.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_misfits_10262017.txt";
         public static string uncRawPrefix = @"\\ieri3svwi003068.ie.moog.com";
         public static string uncPdfPrefix = @"\\ieri3svwi003068.ie.moog.com\tcpdf";
         public static bool isWindows = true;

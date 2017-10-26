@@ -37,6 +37,7 @@ namespace PdmMigration
             HasRev = false;
             HasSht = false;
             HasExt = false;
+            Server = Program.serverName;
 
             if (line.EndsWith(".ss"))
             {
@@ -71,9 +72,6 @@ namespace PdmMigration
 
                 int idx2 = dataFileSplit[0].LastIndexOf('\\');
                 ItemName = dataFileSplit[0].Substring(idx2 + 1);
-
-                UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
-                UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
 
                 if (dataFileSplit.Length == 2)
                 {
@@ -115,6 +113,10 @@ namespace PdmMigration
                     {
                         IsMisfit = true;
                     }
+
+                    UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
+                    UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
+
                 }
 
                 else
@@ -159,9 +161,6 @@ namespace PdmMigration
                 int idx2 = linuxDataFileSplit[0].LastIndexOf('/');
                 ItemName = linuxDataFileSplit[0].Substring(idx2 + 1);
 
-                UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
-                UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
-
                 if (linuxDataFileSplit.Length == 2)
                 {
                     HasExt = true;
@@ -203,9 +202,10 @@ namespace PdmMigration
                     {
                         IsMisfit = true;
                     }
-                    else
-                    {
-                    }
+
+                    UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
+                    UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
+
                 }
 
                 else
@@ -219,7 +219,6 @@ namespace PdmMigration
         {
             //build and return full output line string using the data members above (for Graig's file)
             StringBuilder output = new StringBuilder(FileSize + "," + FileDateTime.ToString("MMM d yyyy HH:mm") + "," + ItemName);
-
             output.Append((HasRev) ? ("," + ItemRev) : (","));
             output.Append((HasSht) ? ("," + ItemSht) : (","));
             output.Append(("," + Server));
