@@ -97,15 +97,22 @@ namespace PdmMigration
             }
         }
 
-        public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary)
+        public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
         {
-            foreach(KeyValuePair<string, List<PdmItem>> kvp in dictionary)
+            int counter = 0;
+
+            foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
+                counter++;
+                if(counter > 50)
+                {
+                    break;
+                }
                 //if there is only one kvp, then we already have a pdf somewhere in theory
                 if(kvp.Value.Count < 2)
                 {
                     //find pdf and copy to correct folder; build batch file
-
+                    batchLines.Add("Copy " + kvp.Value[0].FilePathName + " " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
                     continue;
                 }
 
@@ -137,6 +144,7 @@ namespace PdmMigration
                 //File.WriteAllText(@"\\eacmpnas01.moog.com\Vol3_Data\PDM\migration\pdm.moog.com\jobs\" + kvp.Key + ".xml", jobTicket.ToString());
                 File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
             }
+            File.WriteAllText(batchFile, batchLines.ToString());
         }
 
         public static Hashtable LoadPdmCatalog()
@@ -170,6 +178,7 @@ namespace PdmMigration
             Hashtable pdmCatalogTable = LoadPdmCatalog();
             List<string> delimitedDataField = new List<string>{ "FILE_SIZE,LAST_ACCESSED,ITEM,REV,SHEET,SERVER,UNC_RAW,UNC_PDF" };
             List<string> islandOfMisfitToys = new List<string>();
+            List<string> batchLines = new List<string>();
 
             //parse extract file
             StreamReader file = new StreamReader(inputFile);
@@ -203,7 +212,6 @@ namespace PdmMigration
                 {
                     uID = pdmItem.ItemName;
                 }
-
                 else
                 {
                     uID = pdmItem.ItemName + "." + pdmItem.ItemRev;
@@ -230,8 +238,7 @@ namespace PdmMigration
             //        {
             //            misfit_InvalidSheets
             //        }
-            //    }
-                    
+            //    }      
             //}
             
             //output all misfits to file
@@ -242,7 +249,7 @@ namespace PdmMigration
             //File.WriteAllLines(outputFile, delimitedDataField);
 
             // generate XML job tickets
-            JobTicketGenerator(dictionary);
+            JobTicketGenerator(dictionary, batchLines);
 
         }
     }

@@ -84,7 +84,6 @@ namespace PdmMigration
                     UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
                 }
-
                 else if (dataFileSplit.Length > 2)
                 {
                     if (!Program.IsExt(dataFileSplit[1]))
@@ -124,13 +123,11 @@ namespace PdmMigration
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
 
                 }
-
                 else
                 {
                     IsMisfit = true;
                 }
             }
-
             else
             {
                 //parsing logic for linux
@@ -176,7 +173,6 @@ namespace PdmMigration
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
 
                 }
-
                 else if (linuxDataFileSplit.Length > 2)
                 {
                     if (!Program.IsExt(linuxDataFileSplit[1]))
@@ -214,9 +210,7 @@ namespace PdmMigration
 
                     UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
-
                 }
-
                 else
                 {
                     IsMisfit = true;
