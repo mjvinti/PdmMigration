@@ -52,17 +52,21 @@ namespace PdmMigration
 
                 FileSize = Convert.ToInt64(windowsData[0]);
 
-                //for non LU & IE
-                //FileDateTime = Convert.ToDateTime(windowsData[1] + ' ' + windowsData[2] + ' ' + windowsData[3]);
-                //FilePathName = windowsData[4];
-
-                // for LU
-                //FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                //FilePathName = windowsData[3];
-
-                // for IE
-                FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                FilePathName = windowsData[3];
+                if(Program.isLuDateTime)
+                {
+                    FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    FilePathName = windowsData[3];
+                }
+                else if(Program.isIeDateTime)
+                {
+                    FileDateTime = DateTime.ParseExact(windowsData[1] + ' ' + windowsData[2], "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    FilePathName = windowsData[3];
+                }
+                else
+                {
+                    FileDateTime = Convert.ToDateTime(windowsData[1] + ' ' + windowsData[2] + ' ' + windowsData[3]);
+                    FilePathName = windowsData[4];
+                }
 
                 int idx = FilePathName.LastIndexOf('\\');
                 FilePath = FilePathName.Substring(2, idx + 1);
@@ -77,6 +81,9 @@ namespace PdmMigration
                 {
                     HasExt = true;
                     ItemExt = dataFileSplit[1];
+
+                    UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
+                    UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
                 }
 
                 else if (dataFileSplit.Length > 2)
@@ -165,6 +172,9 @@ namespace PdmMigration
                 {
                     HasExt = true;
                     ItemExt = linuxDataFileSplit[1];
+
+                    UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
+                    UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
 
                 }
 

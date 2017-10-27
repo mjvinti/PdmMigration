@@ -10,14 +10,16 @@ namespace PdmMigration
 {
     class Program
     {
-        public static string catalogFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\PDM-Catalog.csv";
-        public static string inputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\IE_full_2017-10-24-1843.txt";
-        public static string serverName = "pdm.ie.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_extracts_10262017.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\IE\iepdm_misfits_10262017.txt";
-        public static string uncRawPrefix = @"\\ieri3svwi003068.ie.moog.com";
-        public static string uncPdfPrefix = @"\\ieri3svwi003068.ie.moog.com\tcpdf";
-        public static bool isWindows = true;
+        public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-10-26.csv";
+        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\eapdm1_full_2017-10-24-0120.txt";
+        public static string serverName = "pdm.moog.com";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_extracts3_2017-10-26.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits3_2017-10-26.txt";
+        public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
+        public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
+        public static bool isWindows = false;
+        public static bool isLuDateTime = false;
+        public static bool isIeDateTime = false;
 
         public static bool IsExt(string token)
         {
@@ -158,7 +160,7 @@ namespace PdmMigration
             List<PdmItem> pdmItems = new List<PdmItem>();
             Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
             Hashtable pdmCatalogTable = LoadPdmCatalog();
-            List<string> delimitedDataField = new List<string>();
+            List<string> delimitedDataField = new List<string>{ "FILE_SIZE,LAST_ACCESSED,ITEM,REV,SHEET,SERVER,UNC_RAW,UNC_PDF" };
             List<string> islandOfMisfitToys = new List<string>();
 
             //parse extract file
