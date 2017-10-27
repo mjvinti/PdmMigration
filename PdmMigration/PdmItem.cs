@@ -28,7 +28,6 @@ namespace PdmMigration
         public string Server { get; set; }       // ex: pdm.moog.com
         public string UncRaw { get; set; }       // ex: \\eacmpnas01.moog.com\Vol5_Data\PDM\EA\archive\pdm\web\hpgl\A\A12345.0.01.plt
         public string UncPdf { get; set; }       // ex: \\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf\A12345.0.pdf
-        public bool IsWindows { get; set; }
         public bool IsMisfit { get; set; }
 
         public void ParseInputLine(string line)

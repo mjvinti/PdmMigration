@@ -12,6 +12,7 @@ namespace PdmMigration
     {
         public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-10-26.csv";
         public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\eapdm1_full_2017-10-24-0120.txt";
+        public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\singlePdfCopy.bat";
         public static string serverName = "pdm.moog.com";
         public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_extracts3_2017-10-26.txt";
         public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits3_2017-10-26.txt";
@@ -96,10 +97,18 @@ namespace PdmMigration
             }
         }
 
-        public static void JobTicketGenerator(Dictionary<string, List<string>> dictionary)
+        public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary)
         {
-            foreach (KeyValuePair<string, List<string>> kvp in dictionary)
+            foreach(KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
+                //if there is only one kvp, then we already have a pdf somewhere in theory
+                if(kvp.Value.Count < 2)
+                {
+                    //find pdf and copy to correct folder; build batch file
+
+                    continue;
+                }
+
                 StringBuilder jobTicket = new StringBuilder();
 
                 jobTicket.AppendLine("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
@@ -126,7 +135,7 @@ namespace PdmMigration
 
                 Console.WriteLine(jobTicket.ToString());
                 //File.WriteAllText(@"\\eacmpnas01.moog.com\Vol3_Data\PDM\migration\pdm.moog.com\jobs\" + kvp.Key + ".xml", jobTicket.ToString());
-                //File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
+                File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
             }
         }
 
@@ -157,8 +166,7 @@ namespace PdmMigration
 
         static void Main(string[] args)
         {
-            List<PdmItem> pdmItems = new List<PdmItem>();
-            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+            Dictionary<string, List<PdmItem>> dictionary = new Dictionary<string, List<PdmItem>>();
             Hashtable pdmCatalogTable = LoadPdmCatalog();
             List<string> delimitedDataField = new List<string>{ "FILE_SIZE,LAST_ACCESSED,ITEM,REV,SHEET,SERVER,UNC_RAW,UNC_PDF" };
             List<string> islandOfMisfitToys = new List<string>();
@@ -203,13 +211,13 @@ namespace PdmMigration
 
                 if (!dictionary.Keys.Contains(uID))
                 {
-                    List<string> valueFilePath = new List<string>();
-                    valueFilePath.Add(pdmItem.FileName);
-                    dictionary.Add(uID, valueFilePath);
+                    List<PdmItem> pdmItems = new List<PdmItem>();
+                    pdmItems.Add(pdmItem);
+                    dictionary.Add(uID, pdmItems);
                 }
                 else
                 {
-                    dictionary[uID].Add(pdmItem.FileName);
+                    dictionary[uID].Add(pdmItem);
                 }
             }
 
@@ -227,14 +235,14 @@ namespace PdmMigration
             //}
             
             //output all misfits to file
-            File.WriteAllLines(misfitToys, islandOfMisfitToys);
+            //File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
             // generate file for Graig
-            File.WriteAllLines(outputFile, delimitedDataField);
+            //File.WriteAllLines(outputFile, delimitedDataField);
 
             // generate XML job tickets
-            //JobTicketGenerator(dictionary);
+            JobTicketGenerator(dictionary);
 
         }
     }
