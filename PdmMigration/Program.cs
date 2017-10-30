@@ -14,8 +14,8 @@ namespace PdmMigration
         public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\eapdm1_full_2017-10-24-0120.txt";
         public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\singlePdfCopy.bat";
         public static string serverName = "pdm.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_extracts3_2017-10-26.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits3_2017-10-26.txt";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_extracts_2017-10-30.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits_2017-10-30.txt";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
         public static bool isWindows = false;
@@ -112,7 +112,7 @@ namespace PdmMigration
                 if(kvp.Value.Count < 2)
                 {
                     //find pdf and copy to correct folder; build batch file
-                    batchLines.Add("Copy " + kvp.Value[0].FilePathName + " " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
+                    batchLines.Add("Copy " + kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\") + ".pdf " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
                     continue;
                 }
 
@@ -127,7 +127,7 @@ namespace PdmMigration
 
                 foreach (var i in kvp.Value)
                 {
-                    jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + i + "\" FOLDER =\"X:\\PDM\\in\\\" />");
+                    jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + i.FileName + "\" FOLDER =\"X:\\PDM\\in\\\" />");
                 }
 
                 jobTicket.AppendLine("</JOB:DOCINPUTS>");
@@ -144,7 +144,12 @@ namespace PdmMigration
                 //File.WriteAllText(@"\\eacmpnas01.moog.com\Vol3_Data\PDM\migration\pdm.moog.com\jobs\" + kvp.Key + ".xml", jobTicket.ToString());
                 File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
             }
-            File.WriteAllText(batchFile, batchLines.ToString());
+
+            foreach(var batchLine in batchLines)
+            {
+                File.WriteAllText(batchFile, batchLine);
+            }
+
         }
 
         public static Hashtable LoadPdmCatalog()
