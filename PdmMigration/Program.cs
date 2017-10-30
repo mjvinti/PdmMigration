@@ -104,7 +104,7 @@ namespace PdmMigration
             foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
                 counter++;
-                if(counter > 50)
+                if(counter > 100)
                 {
                     break;
                 }
@@ -112,7 +112,15 @@ namespace PdmMigration
                 if(kvp.Value.Count < 2)
                 {
                     //find pdf and copy to correct folder; build batch file
-                    batchLines.Add("Copy " + kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\") + ".pdf " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
+                    if(kvp.Value[0].UncRaw.EndsWith(".pdf"))
+                    {
+                        batchLines.Add("Copy " + kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\") + " " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
+                    }
+                    else
+                    {
+                        batchLines.Add("Copy " + kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\") + ".pdf " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
+                    }
+
                     continue;
                 }
 
@@ -142,14 +150,10 @@ namespace PdmMigration
 
                 Console.WriteLine(jobTicket.ToString());
                 //File.WriteAllText(@"\\eacmpnas01.moog.com\Vol3_Data\PDM\migration\pdm.moog.com\jobs\" + kvp.Key + ".xml", jobTicket.ToString());
-                File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
+                //File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
             }
-
-            foreach(var batchLine in batchLines)
-            {
-                File.WriteAllText(batchFile, batchLine);
-            }
-
+            
+            File.WriteAllLines(batchFile, batchLines);
         }
 
         public static Hashtable LoadPdmCatalog()
@@ -250,10 +254,10 @@ namespace PdmMigration
             //File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
-            // generate file for Graig
+            //generate file for Graig
             //File.WriteAllLines(outputFile, delimitedDataField);
 
-            // generate XML job tickets
+            //generate XML job tickets
             JobTicketGenerator(dictionary, batchLines);
 
         }
