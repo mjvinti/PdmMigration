@@ -4,18 +4,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PdmMigration
 {
     class Program
     {
         public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-10-26.csv";
-        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\eapdm1_full_2017-10-24-0120.txt";
+        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\ForGraig\in\eapdm1_full_2017-10-30-0958.txt";
         public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\singlePdfCopy.bat";
         public static string serverName = "pdm.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_extracts_2017-10-30.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits_2017-10-30.txt";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_extracts_2017-10-31.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits_2017-10-31.txt";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
         public static bool isWindows = false;
@@ -99,30 +98,36 @@ namespace PdmMigration
 
         public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
         {
-            int counter = 0;
-
             foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
-                counter++;
-                if(counter > 100)
-                {
-                    break;
-                }
                 //if there is only one kvp, then we already have a pdf somewhere in theory
-                if(kvp.Value.Count < 2)
+                if (kvp.Value.Count < 2)
                 {
+                    StringBuilder sourcePdfBuilder = new StringBuilder();
+                    
                     //find pdf and copy to correct folder; build batch file
                     if(kvp.Value[0].UncRaw.EndsWith(".pdf"))
                     {
-                        batchLines.Add("Copy " + kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\") + " " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
+                        sourcePdfBuilder.Append(kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\"));
                     }
                     else
                     {
-                        batchLines.Add("Copy " + kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\") + ".pdf " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
+                        sourcePdfBuilder.Append(kvp.Value[0].UncRaw.Replace("web\\", "web\\pdf\\") + ".pdf");
                     }
 
-                    continue;
+                    if(File.Exists(sourcePdfBuilder.ToString()))
+                    {
+                        batchLines.Add("Copy " + sourcePdfBuilder.ToString() + " " + uncPdfPrefix + "\\" + kvp.Key + ".pdf");
+                        continue;
+                    }
+                    else
+                    {
+                        //do nothing and build the job ticket
+                        batchLines.Add("FILE DOES NOT EXIST: " + sourcePdfBuilder.ToString());
+                    }
                 }
+
+                batchLines.Add("Building job ticket");
 
                 StringBuilder jobTicket = new StringBuilder();
 
@@ -135,12 +140,12 @@ namespace PdmMigration
 
                 foreach (var i in kvp.Value)
                 {
-                    jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + i.FileName + "\" FOLDER =\"X:\\PDM\\in\\\" />");
+                    jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + i.FileName + "\" FOLDER =\"" + i.FilePath + "\"/>");
                 }
 
                 jobTicket.AppendLine("</JOB:DOCINPUTS>");
                 jobTicket.AppendLine("<JOB:DOCOUTPUTS>");
-                jobTicket.AppendLine("<JOB:DOCOUTPUT FILENAME = \"" + kvp.Key + ".pdf\" FOLDER = \"X:\\PDM\\out\\\" DOCTYPE=\"PDF\" />");
+                jobTicket.AppendLine("<JOB:DOCOUTPUT FILENAME=\"" + kvp.Key + ".pdf\" FOLDER=\"" + uncPdfPrefix + "\" DOCTYPE=\"PDF\" />");
                 jobTicket.AppendLine("</JOB:DOCOUTPUTS>");
                 jobTicket.AppendLine("<JOB:SETTINGS>");
                 jobTicket.AppendLine("<JOB:PDFSETTINGS JPEGCOMPRESSIONLEVEL=\"5\" MONOIMAGECOMPRESSION=\"Default\" GRAYSCALE=\"No\" PAGECOMPRESSION=\"Yes\" DOWNSAMPLEIMAGES=\"No\" RESOLUTION=\"1200\" PDFVERSION=\"PDFVersion15\" PDFVERSIONINHERIT=\"No\" PAGES=\"All\" />");
@@ -148,9 +153,9 @@ namespace PdmMigration
                 jobTicket.AppendLine("</JOB>");
                 jobTicket.AppendLine("</JOBS>");
 
-                Console.WriteLine(jobTicket.ToString());
+                //Console.WriteLine(jobTicket.ToString());
                 //File.WriteAllText(@"\\eacmpnas01.moog.com\Vol3_Data\PDM\migration\pdm.moog.com\jobs\" + kvp.Key + ".xml", jobTicket.ToString());
-                //File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
+                File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
             }
             
             File.WriteAllLines(batchFile, batchLines);
@@ -251,15 +256,14 @@ namespace PdmMigration
             //}
             
             //output all misfits to file
-            //File.WriteAllLines(misfitToys, islandOfMisfitToys);
+            File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
             //generate file for Graig
-            //File.WriteAllLines(outputFile, delimitedDataField);
+            File.WriteAllLines(outputFile, delimitedDataField);
 
             //generate XML job tickets
             JobTicketGenerator(dictionary, batchLines);
-
         }
     }
 }
