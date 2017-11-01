@@ -157,13 +157,20 @@ namespace PdmMigration
 
                 foreach(var i in kvp.Value)
                 {
+                    string filename = i.FileName;
+
+                    if (i.FileName.EndsWith(".pra"))
+                    {
+                        filename += ".plt";
+                    }
+
                     if (i.FileDateTime == mostRecentDate)
                     {
-                        jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + i.FileName + "\" FOLDER =\"" + i.FilePath + "\"/>");
+                        jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER =\"" + i.FilePath + "\"/>");
                     }
                     else
                     {
-                        jobTicket.AppendLine("<!-- SKIPPING: " + i.FileName + ", " + i.FilePath + " -->");
+                        jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath + " -->");
                     }
                 }
 
