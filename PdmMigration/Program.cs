@@ -17,7 +17,7 @@ namespace PdmMigration
         public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits_2017-10-31.txt";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
-        public static DateTime recentDateTime = "";
+        public static DateTime recentDateTime = DateTime.MinValue;
         public static bool isWindows = false;
         public static bool isLuDateTime = false;
         public static bool isIeDateTime = false;
@@ -227,7 +227,7 @@ namespace PdmMigration
                 pdmItem.ParseInputLine(inputLine);
 
                 //NEW CODE HERE
-                if(pdmItem.FileDateTime > recentDateTime)
+                if(pdmItem.FileDateTime < recentDateTime)
                 {
                     continue;
                 }
