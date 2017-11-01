@@ -17,6 +17,7 @@ namespace PdmMigration
         public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits_2017-10-31.txt";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
+        public static DateTime recentDateTime = "";
         public static bool isWindows = false;
         public static bool isLuDateTime = false;
         public static bool isIeDateTime = false;
@@ -100,6 +101,14 @@ namespace PdmMigration
         {
             foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
+                //if (kvp.Key != "-98081.AF")
+                //{
+                //    Console.WriteLine("     SKIPPING: " + kvp.Key);
+                //    continue;
+                //}
+
+                //Console.WriteLine("NOT SKIPPING: " + kvp.Key);
+
                 //if there is only one kvp, then we already have a pdf somewhere in theory
                 if (kvp.Value.Count < 2)
                 {
@@ -123,11 +132,9 @@ namespace PdmMigration
                     else
                     {
                         //do nothing and build the job ticket
-                        batchLines.Add("FILE DOES NOT EXIST: " + sourcePdfBuilder.ToString());
+                        batchLines.Add("REM FILE DOES NOT EXIST: " + sourcePdfBuilder.ToString());
                     }
                 }
-
-                batchLines.Add("Building job ticket");
 
                 StringBuilder jobTicket = new StringBuilder();
 
@@ -138,9 +145,26 @@ namespace PdmMigration
                 jobTicket.AppendLine("<JOB>");
                 jobTicket.AppendLine("<JOB:DOCINPUTS>");
 
-                foreach (var i in kvp.Value)
+                DateTime mostRecentDate = DateTime.MinValue;
+                foreach(var i in kvp.Value)
                 {
-                    jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + i.FileName + "\" FOLDER =\"" + i.FilePath + "\"/>");
+                    //Find most recent date in list
+                    if(i.FileDateTime > mostRecentDate)
+                    {
+                        mostRecentDate = i.FileDateTime;
+                    }
+                }
+
+                foreach(var i in kvp.Value)
+                {
+                    if (i.FileDateTime == mostRecentDate)
+                    {
+                        jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + i.FileName + "\" FOLDER =\"" + i.FilePath + "\"/>");
+                    }
+                    else
+                    {
+                        jobTicket.AppendLine("<!-- SKIPPING: " + i.FileName + ", " + i.FilePath + " -->");
+                    }
                 }
 
                 jobTicket.AppendLine("</JOB:DOCINPUTS>");
@@ -154,10 +178,8 @@ namespace PdmMigration
                 jobTicket.AppendLine("</JOBS>");
 
                 //Console.WriteLine(jobTicket.ToString());
-                //File.WriteAllText(@"\\eacmpnas01.moog.com\Vol3_Data\PDM\migration\pdm.moog.com\jobs\" + kvp.Key + ".xml", jobTicket.ToString());
-                File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
+                //File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
             }
-            
             File.WriteAllLines(batchFile, batchLines);
         }
 
@@ -204,6 +226,12 @@ namespace PdmMigration
                 PdmItem pdmItem = new PdmItem();
                 pdmItem.ParseInputLine(inputLine);
 
+                //NEW CODE HERE
+                if(pdmItem.FileDateTime > recentDateTime)
+                {
+                    continue;
+                }
+
                 if(!pdmCatalogTable.ContainsKey(pdmItem.FileName))
                 {
                     pdmItem.IsMisfit = true;
@@ -242,25 +270,13 @@ namespace PdmMigration
                     dictionary[uID].Add(pdmItem);
                 }
             }
-
-            //Inspect Dictionary for possible invalid sheets 
-            //foreach(KeyValuePair<string, List<string>> dictionaryKeyValuePair in dictionary)
-            //{
-            //    foreach(var value in dictionaryKeyValuePair.Value)
-            //    {
-            //        if(pdmItem.ItemSht.Length == value.Length)
-            //        {
-            //            misfit_InvalidSheets
-            //        }
-            //    }      
-            //}
             
             //output all misfits to file
-            File.WriteAllLines(misfitToys, islandOfMisfitToys);
+            //File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
             //generate file for Graig
-            File.WriteAllLines(outputFile, delimitedDataField);
+            //File.WriteAllLines(outputFile, delimitedDataField);
 
             //generate XML job tickets
             JobTicketGenerator(dictionary, batchLines);
