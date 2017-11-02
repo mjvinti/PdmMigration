@@ -9,12 +9,12 @@ namespace PdmMigration
 {
     class Program
     {
-        public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-10-26.csv";
-        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\ForGraig\in\eapdm1_full_2017-10-30-0958.txt";
-        public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\singlePdfCopy.bat";
+        public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-01.csv";
+        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_2017-11-01.txt";
+        public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\singlePdfCopy.bat";
         public static string serverName = "pdm.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_extracts_2017-10-31.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_10.25.2017\EA\eapdm_misfits_2017-10-31.txt";
+        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\EA\EA_import_2017-11-01.txt";
+        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\EA\EA_importMisfits_2017-11-01.txt";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
         public static DateTime recentDateTime = DateTime.MinValue;
@@ -99,8 +99,14 @@ namespace PdmMigration
 
         public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
         {
+            int counter = 0;
+            
             foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
+                if (++counter > 100)
+                {
+                    continue;
+                }
                 //if (kvp.Key != "-98081.AF")
                 //{
                 //    Console.WriteLine("     SKIPPING: " + kvp.Key);
@@ -166,17 +172,17 @@ namespace PdmMigration
 
                     if (i.FileDateTime == mostRecentDate)
                     {
-                        jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER =\"" + i.FilePath + "\"/>");
+                        jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER =\"" + uncRawPrefix + i.FilePath.Replace("/", "\\") + "\"/>");
                     }
                     else
                     {
-                        jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath + " -->");
+                        jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
                     }
                 }
 
                 jobTicket.AppendLine("</JOB:DOCINPUTS>");
                 jobTicket.AppendLine("<JOB:DOCOUTPUTS>");
-                jobTicket.AppendLine("<JOB:DOCOUTPUT FILENAME=\"" + kvp.Key + ".pdf\" FOLDER=\"" + uncPdfPrefix + "\" DOCTYPE=\"PDF\" />");
+                jobTicket.AppendLine("<JOB:DOCOUTPUT FILENAME=\"" + kvp.Key + ".pdf\" FOLDER=\"" + uncPdfPrefix + "\\\" DOCTYPE=\"PDF\" />");
                 jobTicket.AppendLine("</JOB:DOCOUTPUTS>");
                 jobTicket.AppendLine("<JOB:SETTINGS>");
                 jobTicket.AppendLine("<JOB:PDFSETTINGS JPEGCOMPRESSIONLEVEL=\"5\" MONOIMAGECOMPRESSION=\"Default\" GRAYSCALE=\"No\" PAGECOMPRESSION=\"Yes\" DOWNSAMPLEIMAGES=\"No\" RESOLUTION=\"1200\" PDFVERSION=\"PDFVersion15\" PDFVERSIONINHERIT=\"No\" PAGES=\"All\" />");
@@ -185,7 +191,7 @@ namespace PdmMigration
                 jobTicket.AppendLine("</JOBS>");
 
                 //Console.WriteLine(jobTicket.ToString());
-                //File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + kvp.Key + ".xml", jobTicket.ToString());
+                File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + mostRecentDate.ToString("yyyy-MM-dd") + "_" +  kvp.Key + ".xml", jobTicket.ToString());
             }
             File.WriteAllLines(batchFile, batchLines);
         }
@@ -279,11 +285,11 @@ namespace PdmMigration
             }
             
             //output all misfits to file
-            //File.WriteAllLines(misfitToys, islandOfMisfitToys);
+            File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
             //generate file for Graig
-            //File.WriteAllLines(outputFile, delimitedDataField);
+            File.WriteAllLines(outputFile, delimitedDataField);
 
             //generate XML job tickets
             JobTicketGenerator(dictionary, batchLines);

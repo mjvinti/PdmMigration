@@ -65,6 +65,11 @@ namespace PdmMigration
                     FilePathName = windowsData[4];
                 }
 
+                if(FilePathName.EndsWith("._"))
+                {
+                    FilePathName = FilePathName.Remove(FilePathName.Length -2, 2);
+                }
+
                 int idx = FilePathName.LastIndexOf('\\');
                 FilePath = FilePathName.Substring(2, idx + 1);
                 FileName = FilePathName.Substring(idx + 1);
@@ -152,6 +157,11 @@ namespace PdmMigration
                 FileDateTime = Convert.ToDateTime(FileMonth + ' ' + FileDay + ' ' + FileYear + ' ' + FileTime);
 
                 FilePathName = linuxData[4];
+
+                if (FilePathName.EndsWith(".Z"))
+                {
+                    FilePathName = FilePathName.Remove(FilePathName.Length - 2, 2);
+                }
 
                 int idx = FilePathName.LastIndexOf('/');
                 FilePath = FilePathName.Substring(0, idx + 1);
