@@ -20,12 +20,10 @@ namespace PdmMigration
             {
                 uncRawPathName.Append(filePath.Remove(0, 2));
             }
-
             else if(filePath.StartsWith("\\\\slctce02"))
             {
                 uncRawPathName.Append(filePath.Remove(0, 10));
             }
-            
             else
             {
                 uncRawPathName.Append(filePath);

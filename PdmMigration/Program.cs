@@ -13,8 +13,9 @@ namespace PdmMigration
         public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_2017-11-01.txt";
         public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\singlePdfCopy.bat";
         public static string serverName = "pdm.moog.com";
-        public static string outputFile = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\EA\EA_import_2017-11-01.txt";
-        public static string misfitToys = @"C:\Users\mvinti\Desktop\PDM\TestDataExtracts\EA\EA_importMisfits_2017-11-01.txt";
+        public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_import_2017-11-01.txt";
+        public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_importMisfits_2017-11-01.txt";
+        public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\jobtickets\";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
         public static DateTime recentDateTime = DateTime.MinValue;
@@ -34,14 +35,11 @@ namespace PdmMigration
                 case "db":
                 case "dis":
                 case "dll_crea":
-                case "doc":
-                case "docx":
                 case "dos":
                 case "dot":
                 case "dwg":
                 case "dxf":
                 case "edt":
-                case "flv":
                 case "gif":
                 case "gp4":
                 case "gwk":
@@ -57,7 +55,6 @@ namespace PdmMigration
                 case "mdb":
                 case "mht":
                 case "mil":
-                case "mpg":
                 case "msg":
                 case "obd":
                 case "oft":
@@ -91,22 +88,60 @@ namespace PdmMigration
                 case "z":
                 case "z_old":
                 case "zip":
+                case "flv":
+                case "mpg":
+                case "doc":
+                case "docx":
                     return true;
                 default:
                     return false;
             }
         }
 
-        public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
+        public static bool IsPdfAble(string fileName)
         {
-            int counter = 0;
-            
+            if (fileName.EndsWith(".Z"))
+            {
+                return false;
+            }
+
+            if (fileName.EndsWith("._"))
+            {
+                return false;
+            }
+
+            if (fileName.ToLower().EndsWith(".zip"))
+            {
+                return false;
+            }
+
+            if (fileName.ToLower().EndsWith(".doc"))
+            {
+                return false;
+            }
+
+            if (fileName.ToLower().EndsWith(".docx"))
+            {
+                return false;
+            }
+
+            if (fileName.ToLower().EndsWith(".mpg"))
+            {
+                return false;
+            }
+
+            if (fileName.ToLower().EndsWith(".flv"))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
+        { 
             foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
-                if (++counter > 100)
-                {
-                    continue;
-                }
                 //if (kvp.Key != "-98081.AF")
                 //{
                 //    Console.WriteLine("     SKIPPING: " + kvp.Key);
@@ -169,14 +204,22 @@ namespace PdmMigration
                     {
                         filename += ".plt";
                     }
-
-                    if (i.FileDateTime == mostRecentDate)
+                    
+                    if(i.PdfAble)
                     {
-                        jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER =\"" + uncRawPrefix + i.FilePath.Replace("/", "\\") + "\"/>");
+                        if (i.FileDateTime == mostRecentDate)
+                        {
+                            jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER =\"" + uncRawPrefix + i.FilePath.Replace("/", "\\") + "\"/>");
+                        }
+                        else
+                        {
+                            jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
+                        }
                     }
                     else
                     {
                         jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
+                        Console.WriteLine("THIS IS NOT PDF-ABLE: " + filename + ", " + i.FilePath);
                     }
                 }
 
@@ -191,7 +234,7 @@ namespace PdmMigration
                 jobTicket.AppendLine("</JOBS>");
 
                 //Console.WriteLine(jobTicket.ToString());
-                File.WriteAllText(@"C:\Users\mvinti\Desktop\PDM\XmlChallenge\jobTickets\" + mostRecentDate.ToString("yyyy-MM-dd") + "_" +  kvp.Key + ".xml", jobTicket.ToString());
+                File.WriteAllText(jobTicketLocation + mostRecentDate.ToString("yyyy-MM-dd") + "_" +  kvp.Key + ".xml", jobTicket.ToString());
             }
             File.WriteAllLines(batchFile, batchLines);
         }
@@ -245,14 +288,14 @@ namespace PdmMigration
                     continue;
                 }
 
-                if(!pdmCatalogTable.ContainsKey(pdmItem.FileName))
+                if (!pdmCatalogTable.ContainsKey(pdmItem.FileName))
                 {
                     pdmItem.IsMisfit = true;
                     islandOfMisfitToys.Add("Not in catalog: " + inputLine);
                     continue;
                 }
 
-                if(pdmItem.IsMisfit)
+                if (pdmItem.IsMisfit)
                 {
                     islandOfMisfitToys.Add("Misfit: " + inputLine);
                 }
