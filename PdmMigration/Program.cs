@@ -9,19 +9,246 @@ namespace PdmMigration
 {
     class Program
     {
-        public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-01.csv";
-        public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_2017-11-01.txt";
+        //CHT
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.cht.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\CHTTCVOL01.cht.moog.com";
+        //public static string uncPdfPrefix = @"\\CHTTCVOL01.cht.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //CN
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.cn.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\cnpu1svwi003012.cn.moog.com";
+        //public static string uncPdfPrefix = @"\\cnpu1svwi003012.cn.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //DE
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.de.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\debo1svwi003010.de.moog.com";
+        //public static string uncPdfPrefix = @"\\debo1svwi003010.de.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //EA
+        public static string catalogFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-10\EA\PDM-Catalog_2017-11-06.csv";
+        public static string inputFile = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-10\EA\xmlTest.txt";
         public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\singlePdfCopy.bat";
         public static string serverName = "pdm.moog.com";
-        public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_import_2017-11-01.txt";
-        public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_importMisfits_2017-11-01.txt";
-        public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\jobtickets\";
+        public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_import_2017-11-06.txt";
+        public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\EA\2017-11-01\EA_importMisfits_2017-11-06.txt";
+        public static string jobTicketLocation = @"C:\Users\mvinti\Desktop\PDM\PdmMigration_Remote_2017-11-10\EA\xmlTestJobTickets\";
         public static string uncRawPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA";
         public static string uncPdfPrefix = @"\\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf";
+        public static string adlibDTD = @"C:\AdlibExpress.dtd";
         public static DateTime recentDateTime = DateTime.MinValue;
         public static bool isWindows = false;
         public static bool isLuDateTime = false;
         public static bool isIeDateTime = false;
+
+        //IE
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.ie.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\ieri3svwi003068.ie.moog.com";
+        //public static string uncPdfPrefix = @"\\ieri3svwi003068.ie.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = true;
+
+        //IN
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "inpdm01.in.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\inel2svwi003011.in.moog.com\IN";
+        //public static string uncPdfPrefix = @"\\inel2svwi003011.in.moog.com\IN\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+
+        //ITC
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.itc.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\itca1svwi003006.it.moog.com";
+        //public static string uncPdfPrefix = @"\\itca1svwi003006.it.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //JP
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.jp.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\jphi1svwi003033.jp.moog.com";
+        //public static string uncPdfPrefix = @"\\jphi1svwi003033.jp.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //LU
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.lu.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\lujp1svwi003239.lu.moog.com";
+        //public static string uncPdfPrefix = @"\\lujp1svwi003239.lu.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = true;
+        //public static bool isIeDateTime = false;
+
+        //MITC
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.in.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\inel2svwi003011.in.moog.com\MITC";
+        //public static string uncPdfPrefix = @"\\inel2svwi003011.in.moog.com\MITC\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //PH
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PH\2017-11-06\PH_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PH\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.ph.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PH\2017-11-06\PH_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\PH\2017-11-06\PH_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\PH\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\PHTCPVOL01.ph.moog.com";
+        //public static string uncPdfPrefix = @"\\PHTCPVOL01.ph.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //SLC
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\SLC\2017-11-06\SLC_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\SLC\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.slc.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\SLC\2017-11-06\SLC_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\SLC\2017-11-06\SLC_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\SLC\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\SLCTCVOL01.slc.moog.com";
+        //public static string uncPdfPrefix = @"\\SLCTCVOL01.slc.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //STL
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.stl.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\DE_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\DE\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\debo1svwi003010.de.moog.com";
+        //public static string uncPdfPrefix = @"\\debo1svwi003010.de.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //TOR
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\2017-11-06\TOR_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.tor.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\2017-11-06\TOR_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\2017-11-06\TOR_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\TOR\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\toriman.tor.moog.com";
+        //public static string uncPdfPrefix = @"\\toriman.tor.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = false;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
+
+        //UK
+        //public static string catalogFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\PDM-Catalog_2017-11-06.csv";
+        //public static string inputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\UK\2017-11-06\UK_2017-11-06.txt";
+        //public static string batchFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\UK\2017-11-06\singlePdfCopy.bat";
+        //public static string serverName = "pdm.uk.moog.com";
+        //public static string outputFile = @"P:\Architecture Group\Projects\PDM Migration\extracts\UK\2017-11-06\UK_import_2017-11-06.txt";
+        //public static string misfitToys = @"P:\Architecture Group\Projects\PDM Migration\extracts\UK\2017-11-06\UK_importMisfits_2017-11-06.txt";
+        //public static string jobTicketLocation = @"P:\Architecture Group\Projects\PDM Migration\extracts\UK\2017-11-06\jobTickets\";
+        //public static string uncRawPrefix = @"\\GBGL1SVTC01.uk.moog.com";
+        //public static string uncPdfPrefix = @"\\GBGL1SVTC01.uk.moog.com\tcpdf";
+        //public static string adlibDTD = @"";
+        //public static DateTime recentDateTime = DateTime.MinValue;
+        //public static bool isWindows = true;
+        //public static bool isLuDateTime = false;
+        //public static bool isIeDateTime = false;
 
         public static bool IsExt(string token)
         {
@@ -139,9 +366,12 @@ namespace PdmMigration
         }
 
         public static void JobTicketGenerator(Dictionary<string, List<PdmItem>> dictionary, List<string> batchLines)
-        { 
+        {
+            int counter = 0;
+
             foreach (KeyValuePair<string, List<PdmItem>> kvp in dictionary)
             {
+                counter++;
                 //if (kvp.Key != "-98081.AF")
                 //{
                 //    Console.WriteLine("     SKIPPING: " + kvp.Key);
@@ -181,7 +411,7 @@ namespace PdmMigration
 
                 jobTicket.AppendLine("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
                 jobTicket.AppendLine("<?AdlibExpress applanguage = \"USA\" appversion = \"4.11.0\" dtdversion = \"2.6\" ?>");
-                jobTicket.AppendLine("<!DOCTYPE JOBS SYSTEM \"X:\\PDM\\AdlibExpress.dtd\">");
+                jobTicket.AppendLine("<!DOCTYPE JOBS SYSTEM \"" + adlibDTD + "\">");
                 jobTicket.AppendLine("<JOBS xmlns:JOBS=\"http://www.adlibsoftware.com\" xmlns:JOB=\"http://www.adlibsoftware.com\">");
                 jobTicket.AppendLine("<JOB>");
                 jobTicket.AppendLine("<JOB:DOCINPUTS>");
@@ -189,16 +419,21 @@ namespace PdmMigration
                 DateTime mostRecentDate = DateTime.MinValue;
                 foreach(var i in kvp.Value)
                 {
-                    //Find most recent date in list
-                    if(i.FileDateTime > mostRecentDate)
+                    //Find most recent date in list; ignore time
+                    if(i.FileDateTime.Date > mostRecentDate)
                     {
-                        mostRecentDate = i.FileDateTime;
+                        mostRecentDate = i.FileDateTime.Date;
                     }
                 }
 
                 foreach(var i in kvp.Value)
                 {
                     string filename = i.FileName;
+
+                    if (i.FileName.EndsWith(".Z") || i.FileName.EndsWith("._"))
+                    {
+                        filename = i.FileName.Remove(i.FileName.Length - 2, 2);
+                    }
 
                     if (i.FileName.EndsWith(".pra"))
                     {
@@ -207,18 +442,18 @@ namespace PdmMigration
                     
                     if(i.PdfAble)
                     {
-                        if (i.FileDateTime == mostRecentDate)
+                        if (i.FileDateTime.Date == mostRecentDate)
                         {
-                            jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER =\"" + uncRawPrefix + i.FilePath.Replace("/", "\\") + "\"/>");
+                            jobTicket.AppendLine("<JOB:DOCINPUT FILENAME=\"" + filename + "\" FOLDER=\"" + uncRawPrefix + i.FilePath.Replace("/", "\\") + "\"/>");
                         }
                         else
                         {
-                            jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
+                            jobTicket.AppendLine("<!-- SKIPPING(OLDER DATE): " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
                         }
                     }
                     else
                     {
-                        jobTicket.AppendLine("<!-- SKIPPING: " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
+                        jobTicket.AppendLine("<!-- SKIPPING(NOT PDF-ABLE): " + filename + ", " + i.FilePath.Replace("/", "\\") + " -->");
                         Console.WriteLine("THIS IS NOT PDF-ABLE: " + filename + ", " + i.FilePath);
                     }
                 }
@@ -233,10 +468,10 @@ namespace PdmMigration
                 jobTicket.AppendLine("</JOB>");
                 jobTicket.AppendLine("</JOBS>");
 
-                //Console.WriteLine(jobTicket.ToString());
+                Console.WriteLine(counter);
                 File.WriteAllText(jobTicketLocation + mostRecentDate.ToString("yyyy-MM-dd") + "_" +  kvp.Key + ".xml", jobTicket.ToString());
             }
-            File.WriteAllLines(batchFile, batchLines);
+            //File.WriteAllLines(batchFile, batchLines);
         }
 
         public static Hashtable LoadPdmCatalog()
@@ -282,7 +517,6 @@ namespace PdmMigration
                 PdmItem pdmItem = new PdmItem();
                 pdmItem.ParseInputLine(inputLine);
 
-                //NEW CODE HERE
                 if(pdmItem.FileDateTime < recentDateTime)
                 {
                     continue;
@@ -328,11 +562,11 @@ namespace PdmMigration
             }
             
             //output all misfits to file
-            File.WriteAllLines(misfitToys, islandOfMisfitToys);
+            //File.WriteAllLines(misfitToys, islandOfMisfitToys);
 
             //Comment this next code until misfits are reviewed and corrected in source extract file
             //generate file for Graig
-            File.WriteAllLines(outputFile, delimitedDataField);
+            //File.WriteAllLines(outputFile, delimitedDataField);
 
             //generate XML job tickets
             JobTicketGenerator(dictionary, batchLines);

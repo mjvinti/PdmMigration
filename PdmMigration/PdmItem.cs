@@ -28,6 +28,7 @@ namespace PdmMigration
         public string UncPdf { get; set; }       // ex: \\eacmpnas01.moog.com\Vol5_Data\PDM\EA\tcpdf\A12345.0.pdf
         public bool IsMisfit { get; set; }
         public bool PdfAble { get; set; }
+        public string PdfAbleFileName { get; set; }
 
         public void ParseInputLine(string line)
         {
@@ -67,16 +68,17 @@ namespace PdmMigration
                     FilePathName = windowsData[4];
                 }
 
-                if(FilePathName.EndsWith("._"))
-                {
-                    FilePathName = FilePathName.Remove(FilePathName.Length -2, 2);
-                }
-
                 int idx = FilePathName.LastIndexOf('\\');
                 FilePath = FilePathName.Substring(2, idx + 1);
                 FileName = FilePathName.Substring(idx + 1);
 
-                PdfAble = Program.IsPdfAble(FileName);
+                PdfAbleFileName = FileName;
+                if(FileName.EndsWith("._"))
+                {
+                    PdfAbleFileName = FileName.Remove(FileName.Length - 2, 2);
+                }
+
+                PdfAble = Program.IsPdfAble(PdfAbleFileName);
                 
                 string[] dataFileSplit = FilePathName.Split('.');
 
@@ -88,7 +90,6 @@ namespace PdmMigration
                     HasExt = true;
                     ItemExt = dataFileSplit[1];
 
-                    //PdfAble = Program.IsPdfAble(ItemExt);
                     UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
                 }
@@ -127,10 +128,8 @@ namespace PdmMigration
                         IsMisfit = true;
                     }
 
-                    //PdfAble = Program.IsPdfAble(ItemExt);
                     UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
-
                 }
                 else
                 {
@@ -164,16 +163,17 @@ namespace PdmMigration
 
                 FilePathName = linuxData[4];
 
-                if (FilePathName.EndsWith(".Z"))
-                {
-                    FilePathName = FilePathName.Remove(FilePathName.Length - 2, 2);
-                }
-
                 int idx = FilePathName.LastIndexOf('/');
                 FilePath = FilePathName.Substring(0, idx + 1);
                 FileName = FilePathName.Substring(idx + 1);
 
-                PdfAble = Program.IsPdfAble(FileName);
+                PdfAbleFileName = FileName;
+                if (FileName.EndsWith(".Z"))
+                {
+                    PdfAbleFileName = FileName.Remove(FileName.Length - 2, 2);
+                }
+
+                PdfAble = Program.IsPdfAble(PdfAbleFileName);
 
                 string[] linuxDataFileSplit = FilePathName.Split('.');
 
@@ -185,10 +185,8 @@ namespace PdmMigration
                     HasExt = true;
                     ItemExt = linuxDataFileSplit[1];
 
-                    //PdfAble = Program.IsPdfAble(ItemExt);
                     UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
-
                 }
                 else if (linuxDataFileSplit.Length > 2)
                 {
@@ -225,7 +223,6 @@ namespace PdmMigration
                         IsMisfit = true;
                     }
 
-                    //PdfAble = Program.IsPdfAble(ItemExt);
                     UncRaw = UncPaths.BuildUncRawPath(Program.uncRawPrefix, FilePathName);
                     UncPdf = UncPaths.BuildUncPdfPath(Program.uncPdfPrefix, ItemName, ItemRev);
                 }
